@@ -1,4 +1,4 @@
 from calendar import package2
-from sys import package3
+from math import package3
 
 print("import package1")

@@ -1,24 +1,25 @@
 import os
 import sys
 import importlib
-import builtins
 
 if __name__ == '__main__':
-    # 可能之前已经导入calendar模块
-    import calendar
+    # 直接或间接导入过calendar模块
+    import mailbox
 
+    # 模块目录加入到系统路径
     temp_dir = "%s/temp_dir" % os.path.dirname(__file__)
     sys.path.insert(0, temp_dir)
 
-    # builtin = False
-    # for importer in sys.meta_path:
-    #     if hasattr(importer, '_ORIGIN') and importer._ORIGIN == 'built-in':
-    #         builtin = importer
-    # if builtin:
-    #     sys.meta_path.remove(builtin)
-    print(sys.meta_path)
-    print(sys.path_hooks)
-    if 'calendar' in sys.modules:
-        del sys.modules['calendar']
-    print(sys.modules.keys())
+    # 去掉BuiltinImporter
+    builtin = None
+    for importer in sys.meta_path:
+        if importer.__name__ == 'BuiltinImporter':
+            builtin = importer
+    if builtin:
+        sys.meta_path.remove(builtin)
+
+    # 去掉已加载的模块
+    for exclude in ["calendar", "math"]:
+        if exclude in sys.modules:
+            del sys.modules[exclude]
     print(importlib.import_module("basic.package1"))
